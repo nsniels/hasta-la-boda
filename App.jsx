@@ -138,13 +138,13 @@ const style = `
   .spacer { height: 1.5rem; }
 
   /* MAP */
-  .map-screen { background: var(--night); display: flex; flex-direction: column; height: 100vh; }
+  .map-screen { background: var(--night); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
   .map-top-banner { background: var(--jungle); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
   .map-top-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: white; }
   .map-top-sub { font-size: 0.7rem; color: rgba(242,232,217,0.6); font-weight: 300; margin-top: 0.1rem; }
-  .map-wrap { flex: 1; position: relative; overflow: hidden; }
+  .map-wrap { flex: 1; position: relative; overflow: scroll; -webkit-overflow-scrolling: touch; }
   .panel-dim { position: absolute; inset: 0; background: rgba(26,18,8,0.25); z-index: 15; }
-  .map-bottom-banner { background: var(--jungle); padding: 0.6rem 1.25rem; display: flex; flex-shrink: 0; }
+  .map-bottom-banner { background: var(--jungle); padding: 0.6rem 1.25rem; display: flex; flex-shrink: 0; z-index: 10; }
   .map-stop-pills { display: flex; gap: 0.4rem; overflow-x: auto; }
   .map-stop-pill { font-size: 0.65rem; font-weight: 600; color: rgba(242,232,217,0.7); background: rgba(255,255,255,0.1); border-radius: 20px; padding: 0.25rem 0.6rem; white-space: nowrap; cursor: pointer; }
   .map-stop-pill.active { background: var(--amber); color: var(--night); }
@@ -474,8 +474,8 @@ function MapScreen({ onNav }) {
       </div>
       <div className="map-wrap">
         {selected !== null && <div className="panel-dim" onClick={() => setSelected(null)} />}
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <img src={IMG_MAP} alt="Mexico kaart" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: "#A8C8E0" }} />
+        <div style={{ position: "relative", width: "200%", minHeight: "100%" }}>
+          <img src={IMG_MAP} alt="Mexico kaart" style={{ width: "100%", height: "auto", display: "block", background: "#A8C8E0" }} />
           {LOCATIONS.map((location, i) => {
             const isSelected = selected === i;
             const color = location.isWedding ? "#D4AF37" : "#C4622D";
