@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const SUPABASE_URL = "https://cvkxkljrhiukekxzdomw.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2a3hrbGpyaGl1a2VreHpkb213Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMDM4MTAsImV4cCI6MjA4Nzg3OTgxMH0.HuZ-6whv9vGZPRG_kizxq15itDCxwabbGH4AILILC4A";
@@ -138,13 +138,13 @@ const style = `
   .spacer { height: 1.5rem; }
 
   /* MAP */
-  .map-screen { background: var(--night); display: flex; flex-direction: column; height: 100vh; }
+  .map-screen { background: var(--night); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
   .map-top-banner { background: var(--jungle); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
   .map-top-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: white; }
   .map-top-sub { font-size: 0.7rem; color: rgba(242,232,217,0.6); font-weight: 300; margin-top: 0.1rem; }
   .map-wrap { flex: 1; position: relative; overflow: hidden; }
   .panel-dim { position: absolute; inset: 0; background: rgba(26,18,8,0.25); z-index: 15; }
-  .map-bottom-banner { background: var(--jungle); padding: 0.6rem 1.25rem; display: flex; flex-shrink: 0; }
+  .map-bottom-banner { background: var(--jungle); padding: 0.6rem 1.25rem; display: flex; flex-shrink: 0; z-index: 10; }
   .map-stop-pills { display: flex; gap: 0.4rem; overflow-x: auto; }
   .map-stop-pill { font-size: 0.65rem; font-weight: 600; color: rgba(242,232,217,0.7); background: rgba(255,255,255,0.1); border-radius: 20px; padding: 0.25rem 0.6rem; white-space: nowrap; cursor: pointer; }
   .map-stop-pill.active { background: var(--amber); color: var(--night); }
@@ -436,6 +436,52 @@ function MapScreen({ onNav }) {
   const [locFotos, setLocFotos] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [hoverFoto, setHoverFoto] = useState(null);
+  const [zoom, setZoom] = useState(1.4);
+  const [pan, setPan] = useState({ x: -80, y: -20 });
+  const mapRef = useRef(null);
+  const innerRef = useRef(null);
+  const pointers = useRef([]);
+  const lastDist = useRef(null);
+  const lastPan = useRef(null);
+  const didMove = useRef(false);
+
+  const onPointerDown = (e) => {
+    pointers.current.push({ id: e.pointerId, x: e.clientX, y: e.clientY });
+    lastPan.current = { x: e.clientX, y: e.clientY };
+    didMove.current = false;
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e) => {
+    const idx = pointers.current.findIndex(p => p.id === e.pointerId);
+    if (idx === -1) return;
+    pointers.current[idx] = { id: e.pointerId, x: e.clientX, y: e.clientY };
+
+    if (pointers.current.length === 2) {
+      // Pinch zoom
+      const [p1, p2] = pointers.current;
+      const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      if (lastDist.current !== null) {
+        const delta = dist / lastDist.current;
+        setZoom(z => Math.min(Math.max(z * delta, 0.8), 4));
+      }
+      lastDist.current = dist;
+      didMove.current = true;
+    } else if (pointers.current.length === 1 && lastPan.current) {
+      // Pan
+      const dx = e.clientX - lastPan.current.x;
+      const dy = e.clientY - lastPan.current.y;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didMove.current = true;
+      setPan(p => ({ x: p.x + dx, y: p.y + dy }));
+      lastPan.current = { x: e.clientX, y: e.clientY };
+    }
+  };
+
+  const onPointerUp = (e) => {
+    pointers.current = pointers.current.filter(p => p.id !== e.pointerId);
+    lastDist.current = null;
+    lastPan.current = null;
+  };
   const loc = selected !== null ? LOCATIONS[selected] : null;
 
   useEffect(() => {
@@ -474,17 +520,25 @@ function MapScreen({ onNav }) {
       </div>
       <div className="map-wrap">
         {selected !== null && <div className="panel-dim" onClick={() => setSelected(null)} />}
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          <img src={IMG_MAP} alt="Mexico kaart" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: "#A8C8E0" }} />
+        <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", background: "#A8C8E0", touchAction: "none" }}
+          ref={mapRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+        >
+          <div style={{ position: "absolute", inset: 0, transformOrigin: "0 0", transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }} ref={innerRef}>
+          <img src={IMG_MAP} alt="Mexico kaart" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", userSelect: "none", WebkitUserSelect: "none" }} draggable="false" />
           {LOCATIONS.map((location, i) => {
             const isSelected = selected === i;
             const color = location.isWedding ? "#D4AF37" : "#C4622D";
             return (
-              <div key={location.id} onClick={() => setSelected(isSelected ? null : i)} style={{ position: "absolute", left: `${location.px}%`, top: `${location.py}%`, transform: "translate(-50%,-50%)", width: location.hitSize, height: location.hitSize, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 5 }}>
+              <div key={location.id} onClick={(e) => { if (!didMove.current) { e.stopPropagation(); setSelected(isSelected ? null : i); } }} style={{ position: "absolute", left: `${location.px}%`, top: `${location.py}%`, transform: "translate(-50%,-50%)", width: location.hitSize, height: location.hitSize, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 5 }}>
                 {isSelected && <div style={{ width: 36, height: 36, borderRadius: "50%", border: `2.5px solid ${color}`, boxShadow: `0 0 0 3px ${color}33` }} />}
               </div>
             );
           })}
+          </div>
         </div>
         <div className={`detail-panel ${selected !== null ? "open" : ""}`}>
           <div className="detail-handle" />
@@ -848,11 +902,10 @@ function FlightsScreen({ onNav }) {
 
 // ─── APP ──────────────────────────────────────────────────────
 export default function App() {
-  const [screen, setScreen] = useState("pin");
+  const [screen, setScreen] = useState("home");
   return (
     <div className="app">
       <style>{style}</style>
-      {screen === "pin" && <PinScreen onUnlock={() => setScreen("home")} />}
       {screen === "home" && <HomeScreen onNav={setScreen} />}
       {screen === "map" && <MapScreen onNav={setScreen} />}
       {screen === "timeline" && <TimelineScreen onNav={setScreen} />}
@@ -860,3 +913,4 @@ export default function App() {
     </div>
   );
 }
+
