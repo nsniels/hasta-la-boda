@@ -173,6 +173,38 @@ const style = `
   .upload-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; background: var(--terracotta); color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
   .upload-loading { font-size: 0.78rem; color: var(--muted); }
 
+  /* HOTELS */
+  .hotels-screen { background: var(--cream); min-height: 100vh; padding-bottom: 80px; }
+  .hotels-hero { background: var(--night); padding: 1.5rem; position: relative; overflow: hidden; }
+  .hotels-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 90% 40%, rgba(45,90,61,0.5) 0%, transparent 55%); }
+  .hotels-hero-inner { position: relative; z-index: 1; }
+  .hotels-hero-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.3rem; }
+  .hotels-hero-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: white; margin-bottom: 0.25rem; }
+  .hotels-hero-sub { font-size: 0.82rem; color: rgba(242,232,217,0.6); font-weight: 300; }
+  .hotels-hero-stats { display: flex; gap: 1.5rem; margin-top: 1rem; }
+  .hotels-hero-stat-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: white; line-height: 1; }
+  .hotels-hero-stat-label { font-size: 0.65rem; color: rgba(242,232,217,0.55); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.1rem; }
+  .hotels-body { padding: 1.5rem; }
+  .hotel-card { background: white; border-radius: 18px; margin-bottom: 0.85rem; overflow: hidden; border: 1px solid rgba(139,115,85,0.1); box-shadow: 0 2px 12px rgba(26,18,8,0.06); }
+  .hotel-header { padding: 1rem 1.25rem; background: var(--jungle); color: white; display: flex; align-items: center; justify-content: space-between; }
+  .hotel-location { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; margin-bottom: 0.2rem; }
+  .hotel-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+  .hotel-dates-badge { font-size: 0.72rem; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 0.3rem 0.6rem; text-align: right; white-space: nowrap; }
+  .hotel-tear { display: flex; align-items: center; }
+  .hotel-tear-circle-l { width: 18px; height: 18px; border-radius: 50%; background: var(--cream); margin-left: -9px; flex-shrink: 0; }
+  .hotel-tear-circle-r { width: 18px; height: 18px; border-radius: 50%; background: var(--cream); margin-right: -9px; margin-left: auto; flex-shrink: 0; }
+  .hotel-tear-line { flex: 1; border-top: 1.5px dashed rgba(139,115,85,0.2); margin: 0 0.5rem; }
+  .hotel-body { padding: 0.85rem 1.25rem 1.1rem; display: flex; align-items: center; justify-content: space-between; }
+  .hotel-info { flex: 1; }
+  .hotel-adres { font-size: 0.82rem; color: var(--muted); font-weight: 300; margin-bottom: 0.4rem; }
+  .hotel-actions { display: flex; gap: 0.5rem; align-items: center; }
+  .hotel-maps-btn { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--terracotta); background: #FEF3E2; border: none; border-radius: 8px; padding: 0.35rem 0.7rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; text-decoration: none; }
+  .hotel-edit-btn { font-size: 0.72rem; color: var(--muted); background: var(--cream); border: none; border-radius: 8px; padding: 0.35rem 0.6rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .hotel-status { display: inline-flex; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; margin-bottom: 0.5rem; }
+  .hotel-status.confirmed { background: #E8F4E8; color: var(--jungle); }
+  .hotel-status.pending { background: #FEF3E2; color: #B45309; }
+  .add-hotel-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; margin: 1rem 0 0.5rem; padding: 0.9rem; background: white; border: 2px dashed rgba(139,115,85,0.25); border-radius: 14px; color: var(--terracotta); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+
   /* TIMELINE */
   .tl-screen { background: var(--cream); min-height: 100vh; padding-bottom: 80px; }
   .tl-hero { background: var(--night); padding: 1.5rem; position: relative; overflow: hidden; }
@@ -354,7 +386,7 @@ function PinScreen({ onUnlock }) {
 function BottomNav({ active, onNav }) {
   const items = [
     { id: "home", icon: "🏠", label: "Home" },
-    { id: "map", icon: "🗺️", label: "Kaart" },
+    { id: "hotels", icon: "🏨", label: "Hotels" },
     { id: "flights", icon: "✈️", label: "Vluchten" },
     { id: "timeline", icon: "📅", label: "Tijdlijn" },
   ];
@@ -373,9 +405,9 @@ function BottomNav({ active, onNav }) {
 // ─── HOME ─────────────────────────────────────────────────────
 function HomeScreen({ onNav }) {
   const recent = [
-    { emoji: "💀", bg: "#F3E8FF", title: "Dag van de Doden op de Zócalo", meta: "1 nov · Mexico-Stad" },
-    { emoji: "🎈", bg: "#FEF3E2", title: "Ballonvlucht boven de vallei", meta: "3 nov · Mexico-Stad" },
-    { emoji: "🏝️", bg: "#E0F0E9", title: "Zonsondergang op Isla Holbox", meta: "9 nov · Holbox" },
+    { emoji: "💀", bg: "#F3E8FF", title: "Día de los Muertos op de Zócalo", meta: "1 nov · Mexico-Stad" },
+    { emoji: "🦈", bg: "#E0F0F8", title: "Snorkelen met walvishaaien", meta: "9–11 nov · Isla Holbox" },
+    { emoji: "💒", bg: "#FEF9E7", title: "Bruiloft van Roel 🎊", meta: "21 nov · Monterrey" },
   ];
   return (
     <div className="home-screen">
@@ -407,13 +439,13 @@ function HomeScreen({ onNav }) {
       <div className="section">
         <div className="section-header"><div className="section-title">Ontdekken</div></div>
         <div className="feature-grid">
-          <div className="feature-card accent" onClick={() => onNav("map")}><span className="feature-icon">🗺️</span><div className="feature-title">Kaart</div><div className="feature-desc">Alle stops op de interactieve kaart</div></div>
+          <div className="feature-card accent" onClick={() => onNav("hotels")}><span className="feature-icon">🏨</span><div className="feature-title">Hotels</div><div className="feature-desc">Alle accommodaties op een rij</div></div>
           <div className="feature-card" onClick={() => onNav("flights")}><span className="feature-icon">✈️</span><div className="feature-title">Vluchten</div><div className="feature-desc">Alle vluchten op een rij</div></div>
           <div className="feature-card wide" onClick={() => onNav("timeline")}><span className="feature-icon">📅</span><div className="feature-title">Tijdlijn</div><div className="feature-desc">Bekijk de hele reis dag voor dag</div></div>
         </div>
       </div>
       <div className="section">
-        <div className="section-header"><div className="section-title">Recente momenten</div><span className="section-link" onClick={() => onNav("timeline")}>Alles zien</span></div>
+        <div className="section-header"><div className="section-title">Opkomende highlights</div><span className="section-link" onClick={() => onNav("timeline")}>Alles zien</span></div>
         <div className="moments-list">
           {recent.map((m,i) => (
             <div className="moment-card" key={i} onClick={() => onNav("timeline")}>
@@ -720,6 +752,145 @@ function TimelineScreen({ onNav }) {
   );
 }
 
+
+// ─── HOTEL MODAL ──────────────────────────────────────────────
+function HotelModal({ hotel, onClose, onSave, onDelete }) {
+  const [form, setForm] = useState(hotel || { locatie: "", naam: "", adres: "", maps_url: "", check_in: "", check_out: "", status: "pending", sort_order: 99 });
+  const [saving, setSaving] = useState(false);
+  const set = (k, v) => setForm(f => ({...f, [k]: v}));
+
+  const save = async () => {
+    setSaving(true);
+    await onSave(form);
+    setSaving(false);
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-title">{hotel ? "Hotel bewerken" : "Hotel toevoegen"}</div>
+        <div className="modal-field"><label className="modal-label">Locatie</label>
+          <select className="modal-select" value={form.locatie} onChange={e => set("locatie", e.target.value)}>
+            {["Mexico-Stad","Oaxaca","Isla Holbox","Valladolid","Bacalar","Calakmul","Monterrey"].map(l => <option key={l}>{l}</option>)}
+          </select>
+        </div>
+        <div className="modal-field"><label className="modal-label">Hotelnaam</label><input className="modal-input" value={form.naam} onChange={e => set("naam", e.target.value)} placeholder="Hotel Casa Oaxaca" /></div>
+        <div className="modal-field"><label className="modal-label">Adres</label><input className="modal-input" value={form.adres} onChange={e => set("adres", e.target.value)} placeholder="Calle García Vigil 407" /></div>
+        <div className="modal-field"><label className="modal-label">Google Maps link</label><input className="modal-input" value={form.maps_url || ""} onChange={e => set("maps_url", e.target.value)} placeholder="https://maps.google.com/..." /></div>
+        <div className="modal-row">
+          <div className="modal-field"><label className="modal-label">Check-in</label><input className="modal-input" value={form.check_in} onChange={e => set("check_in", e.target.value)} placeholder="4 nov" /></div>
+          <div className="modal-field"><label className="modal-label">Check-out</label><input className="modal-input" value={form.check_out} onChange={e => set("check_out", e.target.value)} placeholder="8 nov" /></div>
+        </div>
+        <div className="modal-field"><label className="modal-label">Status</label>
+          <select className="modal-select" value={form.status} onChange={e => set("status", e.target.value)}>
+            <option value="pending">⏳ Te boeken</option>
+            <option value="confirmed">✓ Bevestigd</option>
+          </select>
+        </div>
+        <div className="modal-actions">
+          {hotel && <button className="btn-danger" onClick={() => onDelete(hotel.id)}>Verwijderen</button>}
+          <button className="btn-secondary" onClick={onClose}>Annuleren</button>
+          <button className="btn-primary" onClick={save} disabled={saving}>{saving ? "Opslaan..." : "Opslaan"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HotelCard({ hotel, onEdit }) {
+  return (
+    <div className="hotel-card">
+      <div className="hotel-header">
+        <div>
+          <div className="hotel-location">📍 {hotel.locatie}</div>
+          <div className="hotel-name">{hotel.naam || "Nader te bepalen"}</div>
+        </div>
+        <div className="hotel-dates-badge">
+          <div style={{ fontWeight: 600 }}>{hotel.check_in}</div>
+          <div style={{ opacity: 0.8 }}>→ {hotel.check_out}</div>
+        </div>
+      </div>
+      <div className="hotel-tear"><div className="hotel-tear-circle-l" /><div className="hotel-tear-line" /><div className="hotel-tear-circle-r" /></div>
+      <div className="hotel-body">
+        <div className="hotel-info">
+          <span className={`hotel-status ${hotel.status}`}>{hotel.status === "confirmed" ? "✓ Bevestigd" : "⏳ Te boeken"}</span>
+          <div className="hotel-adres">{hotel.adres !== "—" && hotel.adres ? hotel.adres : "Adres nog onbekend"}</div>
+        </div>
+        <div className="hotel-actions">
+          {hotel.maps_url && <a className="hotel-maps-btn" href={hotel.maps_url} target="_blank" rel="noreferrer">🗺️ Maps</a>}
+          <button className="hotel-edit-btn" onClick={() => onEdit(hotel)}>✏️</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── HOTELS ───────────────────────────────────────────────────
+function HotelsScreen({ onNav }) {
+  const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(null);
+
+  useEffect(() => {
+    sb.from("hotels").select("*", "sort_order").then(data => {
+      if (Array.isArray(data)) setHotels(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const saveHotel = async (form) => {
+    if (form.id) {
+      const updated = await sb.from("hotels").update(form, { id: form.id });
+      if (Array.isArray(updated) && updated[0]) setHotels(prev => prev.map(h => h.id === form.id ? updated[0] : h));
+    } else {
+      const created = await sb.from("hotels").insert(form);
+      if (Array.isArray(created) && created[0]) setHotels(prev => [...prev, created[0]]);
+    }
+    setModal(null);
+  };
+
+  const deleteHotel = async (id) => {
+    await sb.from("hotels").delete({ id });
+    setHotels(prev => prev.filter(h => h.id !== id));
+    setModal(null);
+  };
+
+  const confirmed = hotels.filter(h => h.status === "confirmed").length;
+
+  return (
+    <div className="hotels-screen">
+      <div className="topbar"><div className="topbar-logo">Hasta la Boda</div><div className="topbar-avatar">JB</div></div>
+      <div className="hotels-hero">
+        <div className="hotels-hero-inner">
+          <div className="hotels-hero-label">🏨 Accommodaties</div>
+          <div className="hotels-hero-title">Onze hotels</div>
+          <div className="hotels-hero-sub">Van Mexico-Stad tot Monterrey — 8 nachten</div>
+          <div className="hotels-hero-stats">
+            <div><div className="hotels-hero-stat-num">{hotels.length}</div><div className="hotels-hero-stat-label">Hotels</div></div>
+            <div><div className="hotels-hero-stat-num">{confirmed}</div><div className="hotels-hero-stat-label">Bevestigd</div></div>
+            <div><div className="hotels-hero-stat-num">{hotels.length - confirmed}</div><div className="hotels-hero-stat-label">Te boeken</div></div>
+          </div>
+        </div>
+      </div>
+      <div className="hotels-body">
+        {loading ? <div className="loading">Hotels laden... 🏨</div> : <>
+          {hotels.map(h => <HotelCard key={h.id} hotel={h} onEdit={setModal} />)}
+          <button className="add-hotel-btn" onClick={() => setModal("new")}>＋ Hotel toevoegen</button>
+        </>}
+      </div>
+      {modal && (
+        <HotelModal
+          hotel={modal === "new" ? null : modal}
+          onClose={() => setModal(null)}
+          onSave={saveHotel}
+          onDelete={deleteHotel}
+        />
+      )}
+      <BottomNav active="hotels" onNav={onNav} />
+    </div>
+  );
+}
+
 // ─── FLIGHTS ──────────────────────────────────────────────────
 function FlightModal({ flight, onClose, onSave, onDelete }) {
   const [form, setForm] = useState(flight || { type: "domestic", airline: "", flight_num: "", from_code: "", from_city: "", from_airport: "", to_code: "", to_city: "", to_airport: "", date: "", departure: "", arrival: "", duration: "", stops: "", terminal: "—", gate: "—", status: "pending", notes: "", sort_order: 99 });
@@ -907,10 +1078,9 @@ export default function App() {
     <div className="app">
       <style>{style}</style>
       {screen === "home" && <HomeScreen onNav={setScreen} />}
-      {screen === "map" && <MapScreen onNav={setScreen} />}
+      {screen === "hotels" && <HotelsScreen onNav={setScreen} />}
       {screen === "timeline" && <TimelineScreen onNav={setScreen} />}
       {screen === "flights" && <FlightsScreen onNav={setScreen} />}
     </div>
   );
 }
-
