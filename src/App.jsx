@@ -139,6 +139,7 @@ const style = `
 
   /* MAP */
   .map-screen { background: var(--night); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  .map-wrap { flex: 1; position: relative; min-height: 0; }
   .map-top-banner { background: var(--jungle); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
   .map-top-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: white; }
   .map-top-sub { font-size: 0.7rem; color: rgba(242,232,217,0.6); font-weight: 300; margin-top: 0.1rem; }
@@ -386,6 +387,7 @@ function PinScreen({ onUnlock }) {
 function BottomNav({ active, onNav }) {
   const items = [
     { id: "home", icon: "🏠", label: "Home" },
+    { id: "map", icon: "🗺️", label: "Kaart" },
     { id: "hotels", icon: "🏨", label: "Hotels" },
     { id: "flights", icon: "✈️", label: "Vluchten" },
     { id: "timeline", icon: "📅", label: "Tijdlijn" },
@@ -439,8 +441,9 @@ function HomeScreen({ onNav }) {
       <div className="section">
         <div className="section-header"><div className="section-title">Ontdekken</div></div>
         <div className="feature-grid">
-          <div className="feature-card accent" onClick={() => onNav("hotels")}><span className="feature-icon">🏨</span><div className="feature-title">Hotels</div><div className="feature-desc">Alle accommodaties op een rij</div></div>
+          <div className="feature-card accent" onClick={() => onNav("map")}><span className="feature-icon">🗺️</span><div className="feature-title">Kaart</div><div className="feature-desc">Interactieve reiskaart met route</div></div>
           <div className="feature-card" onClick={() => onNav("flights")}><span className="feature-icon">✈️</span><div className="feature-title">Vluchten</div><div className="feature-desc">Alle vluchten op een rij</div></div>
+          <div className="feature-card" onClick={() => onNav("hotels")}><span className="feature-icon">🏨</span><div className="feature-title">Hotels</div><div className="feature-desc">Alle accommodaties op een rij</div></div>
           <div className="feature-card wide" onClick={() => onNav("timeline")}><span className="feature-icon">📅</span><div className="feature-title">Tijdlijn</div><div className="feature-desc">Bekijk de hele reis dag voor dag</div></div>
         </div>
       </div>
@@ -462,157 +465,232 @@ function HomeScreen({ onNav }) {
   );
 }
 
-// ─── MAP ──────────────────────────────────────────────────────
+
+// ─── MAP SCREEN ───────────────────────────────────────────────
+const MAPBOX_TOKEN = "pk.eyJ1IjoibnNuaWVscyIsImEiOiJjbW51am42YTkwN2dmMnJzOW8zdnp4eDQ3In0.hA84ihN32uGkuKpVvg9Ajg";
+
+const STOPS = [
+  { id: 1, name: "Mexico-Stad", emoji: "🏛️", dates: "31 okt – 3 nov", days: "4 dagen", lng: -99.1332, lat: 19.4326, zoom: 11 },
+  { id: 2, name: "Oaxaca", emoji: "🫙", dates: "4 – 7 nov", days: "4 dagen", lng: -96.7266, lat: 17.0669, zoom: 12 },
+  { id: 3, name: "Cancún", emoji: "✈️", dates: "8 nov", days: "Reisdag", lng: -86.8515, lat: 21.1619, zoom: 11 },
+  { id: 4, name: "Isla Holbox", emoji: "🏝️", dates: "9 – 11 nov", days: "3 dagen", lng: -87.3769, lat: 21.5245, zoom: 12 },
+  { id: 5, name: "Valladolid", emoji: "🗿", dates: "12 – 14 nov", days: "3 dagen", lng: -88.2003, lat: 20.6896, zoom: 12 },
+  { id: 6, name: "Bacalar", emoji: "🚣", dates: "15–16 & 19 nov", days: "3 nachten", lng: -88.3953, lat: 18.6783, zoom: 12 },
+  { id: 7, name: "Calakmul", emoji: "🌿", dates: "17 – 18 nov", days: "2 dagen", lng: -89.7956, lat: 18.1057, zoom: 11 },
+  { id: 8, name: "Monterrey", emoji: "💒", dates: "20 – 23 nov", days: "4 dagen", lng: -100.3161, lat: 25.6866, zoom: 11, isWedding: true },
+];
+
+const ROUTES = [
+  { from: 0, to: 1, type: "flight" },   // Mexico-Stad → Oaxaca
+  { from: 1, to: 2, type: "flight" },   // Oaxaca → Cancún
+  { from: 2, to: 3, type: "ferry" },    // Cancún → Holbox
+  { from: 3, to: 4, type: "bus" },      // Holbox → Valladolid
+  { from: 4, to: 5, type: "bus" },      // Valladolid → Bacalar
+  { from: 5, to: 6, type: "car" },      // Bacalar → Calakmul
+  { from: 6, to: 5, type: "car" },      // Calakmul → Bacalar
+  { from: 5, to: 7, type: "flight" },   // Bacalar → Monterrey
+];
+
 function MapScreen({ onNav }) {
-  const [selected, setSelected] = useState(null);
-  const [locFotos, setLocFotos] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const [hoverFoto, setHoverFoto] = useState(null);
-  const [zoom, setZoom] = useState(1.4);
-  const [pan, setPan] = useState({ x: -80, y: -20 });
+  const [active, setActive] = useState(0);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const mapContainer = useRef(null);
   const mapRef = useRef(null);
-  const innerRef = useRef(null);
-  const pointers = useRef([]);
-  const lastDist = useRef(null);
-  const lastPan = useRef(null);
-  const didMove = useRef(false);
+  const markersRef = useRef([]);
+  const slidesRef = useRef(null);
 
-  const onPointerDown = (e) => {
-    pointers.current.push({ id: e.pointerId, x: e.clientX, y: e.clientY });
-    lastPan.current = { x: e.clientX, y: e.clientY };
-    didMove.current = false;
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-
-  const onPointerMove = (e) => {
-    const idx = pointers.current.findIndex(p => p.id === e.pointerId);
-    if (idx === -1) return;
-    pointers.current[idx] = { id: e.pointerId, x: e.clientX, y: e.clientY };
-
-    if (pointers.current.length === 2) {
-      // Pinch zoom
-      const [p1, p2] = pointers.current;
-      const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-      if (lastDist.current !== null) {
-        const delta = dist / lastDist.current;
-        setZoom(z => Math.min(Math.max(z * delta, 0.8), 4));
-      }
-      lastDist.current = dist;
-      didMove.current = true;
-    } else if (pointers.current.length === 1 && lastPan.current) {
-      // Pan
-      const dx = e.clientX - lastPan.current.x;
-      const dy = e.clientY - lastPan.current.y;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didMove.current = true;
-      setPan(p => ({ x: p.x + dx, y: p.y + dy }));
-      lastPan.current = { x: e.clientX, y: e.clientY };
-    }
-  };
-
-  const onPointerUp = (e) => {
-    pointers.current = pointers.current.filter(p => p.id !== e.pointerId);
-    lastDist.current = null;
-    lastPan.current = null;
-  };
-  const loc = selected !== null ? LOCATIONS[selected] : null;
-
+  // Mapbox loaded via index.html — just wait for it
   useEffect(() => {
-    if (!loc) return;
-    sb.from("fotos").select("*", "created_at").then(data => {
-      if (Array.isArray(data)) setLocFotos(data.filter(f => f.locatie_naam === loc.name));
+    const check = () => {
+      if (window.mapboxgl) setMapLoaded(true);
+      else setTimeout(check, 100);
+    };
+    check();
+  }, []);
+
+  // Init map
+  useEffect(() => {
+    if (!mapLoaded || !mapContainer.current || mapRef.current) return;
+    const map = new window.mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/outdoors-v12",
+      center: [STOPS[0].lng, STOPS[0].lat],
+      zoom: STOPS[0].zoom,
+      accessToken: MAPBOX_TOKEN,
+      attributionControl: false,
     });
-  }, [selected]);
 
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !loc) return;
-    setUploading(true);
-    const pad = `${loc.name.replace(/\s/g,"_")}/${Date.now()}_${file.name}`;
-    const { url, error } = await sb.storage.upload(pad, file);
-    if (!error) {
-      const result = await sb.from("fotos").insert({ locatie_naam: loc.name, bestandsnaam: file.name, opslag_pad: pad, publieke_url: url, geupload_door: "Crew" });
-      if (Array.isArray(result) && result[0]) setLocFotos(prev => [...prev, result[0]]);
-    }
-    setUploading(false);
+    map.on("load", () => {
+      // Draw routes as arcs
+      const routeFeatures = ROUTES.map((r, i) => {
+        const from = STOPS[r.from];
+        const to = STOPS[r.to];
+        const isFlight = r.type === "flight";
+        // Create arc points
+        const points = [];
+        const steps = isFlight ? 30 : 15;
+        for (let t = 0; t <= steps; t++) {
+          const frac = t / steps;
+          const lng = from.lng + (to.lng - from.lng) * frac;
+          const lat = from.lat + (to.lat - from.lat) * frac;
+          const arc = isFlight ? Math.sin(Math.PI * frac) * (Math.abs(to.lng - from.lng) * 0.3) : 0;
+          points.push([lng, lat + arc]);
+        }
+        return {
+          type: "Feature",
+          properties: { type: r.type, index: i },
+          geometry: { type: "LineString", coordinates: points }
+        };
+      });
+
+      map.addSource("routes", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: routeFeatures }
+      });
+
+      // Flight routes - dashed orange arc
+      map.addLayer({
+        id: "routes-flight",
+        type: "line",
+        source: "routes",
+        filter: ["==", ["get", "type"], "flight"],
+        paint: {
+          "line-color": "#C4622D",
+          "line-width": 2,
+          "line-dasharray": [2, 2],
+          "line-opacity": 0.8
+        }
+      });
+
+      // Bus/ferry/car routes - solid muted line
+      map.addLayer({
+        id: "routes-ground",
+        type: "line",
+        source: "routes",
+        filter: ["!=", ["get", "type"], "flight"],
+        paint: {
+          "line-color": "#2D5A3D",
+          "line-width": 2,
+          "line-dasharray": [1, 3],
+          "line-opacity": 0.7
+        }
+      });
+
+      // Add markers
+      STOPS.forEach((stop, i) => {
+        const el = document.createElement("div");
+        el.style.cssText = `
+          width: 36px; height: 36px; border-radius: 50%;
+          background: ${stop.isWedding ? "linear-gradient(135deg,#D4AF37,#C4622D)" : "white"};
+          border: 2.5px solid ${stop.isWedding ? "#D4AF37" : "#C4622D"};
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1rem; cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+          transition: transform 0.2s;
+        `;
+        el.innerHTML = stop.emoji;
+        el.addEventListener("click", () => {
+          setActive(i);
+          scrollToSlide(i);
+        });
+        const marker = new window.mapboxgl.Marker({ element: el, anchor: "center" })
+          .setLngLat([stop.lng, stop.lat])
+          .addTo(map);
+        markersRef.current.push({ marker, el });
+      });
+
+      mapRef.current = map;
+    });
+
+    return () => { if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } };
+  }, [mapLoaded]);
+
+  // Fly to active stop and update marker styles
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const stop = STOPS[active];
+    mapRef.current.flyTo({
+      center: [stop.lng, stop.lat],
+      zoom: stop.zoom,
+      duration: 1200,
+      essential: true
+    });
+    markersRef.current.forEach(({ el }, i) => {
+      el.style.transform = i === active ? "scale(1.3)" : "scale(1)";
+      el.style.zIndex = i === active ? "10" : "1";
+    });
+  }, [active]);
+
+  const scrollToSlide = (i) => {
+    if (!slidesRef.current) return;
+    const slide = slidesRef.current.children[i];
+    if (slide) slide.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   };
 
-  const handleDeleteFoto = async (foto) => {
-    if (!window.confirm(`Foto verwijderen?`)) return;
-    await sb.storageDelete(foto.opslag_pad);
-    await sb.from("fotos").delete({ id: foto.id });
-    setLocFotos(prev => prev.filter(f => f.id !== foto.id));
+  const goTo = (i) => {
+    setActive(i);
+    scrollToSlide(i);
   };
+
+  const routeIcon = (type) => type === "flight" ? "✈️" : type === "ferry" ? "⛴️" : type === "bus" ? "🚌" : "🚗";
 
   return (
     <div className="map-screen">
       <div className="topbar"><div className="topbar-logo">Hasta la Boda</div><div className="topbar-avatar">JB</div></div>
-      <div className="map-top-banner">
-        <div><div className="map-top-title">🗺️ Onze route door México</div><div className="map-top-sub">31 okt – 23 nov · 8 bestemmingen · klik op een ster</div></div>
-        <div style={{ fontSize: "1.6rem" }}>🌵</div>
-      </div>
+
+      {/* Map */}
       <div className="map-wrap">
-        {selected !== null && <div className="panel-dim" onClick={() => setSelected(null)} />}
-        <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", background: "#A8C8E0", touchAction: "none" }}
-          ref={mapRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-        >
-          <div style={{ position: "absolute", inset: 0, transformOrigin: "0 0", transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }} ref={innerRef}>
-          <img src={IMG_MAP} alt="Mexico kaart" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", userSelect: "none", WebkitUserSelect: "none" }} draggable="false" />
-          {LOCATIONS.map((location, i) => {
-            const isSelected = selected === i;
-            const color = location.isWedding ? "#D4AF37" : "#C4622D";
+        {!mapLoaded && (
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#E8E0D5", zIndex: 5, flexDirection: "column", gap: "0.5rem" }}>
+            <div style={{ fontSize: "2rem" }}>🗺️</div>
+            <div style={{ fontSize: "0.85rem", color: "#8B7355" }}>Kaart laden...</div>
+          </div>
+        )}
+        <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />
+      </div>
+
+      {/* Route indicator between stops */}
+      {active < STOPS.length - 1 && (
+        <div style={{ background: "white", borderTop: "1px solid rgba(139,115,85,0.1)", padding: "0.4rem 1.25rem", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.72rem", color: "var(--muted)" }}>
+          <span>{STOPS[active].name}</span>
+          <span style={{ flex: 1, textAlign: "center" }}>
+            {(() => {
+              const r = ROUTES.find(r => r.from === active);
+              return r ? `${routeIcon(r.type)} ${r.type === "flight" ? "vlucht" : r.type === "ferry" ? "ferry" : r.type === "bus" ? "bus" : "auto"}` : "→";
+            })()}
+          </span>
+          <span>{STOPS[active + 1]?.name}</span>
+        </div>
+      )}
+
+      {/* Slidebar */}
+      <div style={{ background: "var(--night)", padding: "0.75rem 0 0.85rem", flexShrink: 0 }}>
+        <div ref={slidesRef} style={{ display: "flex", gap: "0.6rem", overflowX: "auto", padding: "0 1rem", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}>
+          {STOPS.map((stop, i) => {
+            const isActive = active === i;
             return (
-              <div key={location.id} onClick={(e) => { if (!didMove.current) { e.stopPropagation(); setSelected(isSelected ? null : i); } }} style={{ position: "absolute", left: `${location.px}%`, top: `${location.py}%`, transform: "translate(-50%,-50%)", width: location.hitSize, height: location.hitSize, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 5 }}>
-                {isSelected && <div style={{ width: 36, height: 36, borderRadius: "50%", border: `2.5px solid ${color}`, boxShadow: `0 0 0 3px ${color}33` }} />}
+              <div key={stop.id} onClick={() => goTo(i)} style={{
+                flexShrink: 0, width: 140, borderRadius: 16,
+                background: isActive ? (stop.isWedding ? "linear-gradient(135deg,#D4AF37,#C4622D)" : "var(--terracotta)") : "rgba(255,255,255,0.08)",
+                border: isActive ? "none" : "1.5px solid rgba(255,255,255,0.1)",
+                padding: "0.85rem 1rem", cursor: "pointer",
+                transition: "all 0.2s", scrollSnapAlign: "start",
+              }}>
+                <div style={{ fontSize: "1.4rem", marginBottom: "0.35rem" }}>{stop.emoji}</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.95rem", color: "white", fontWeight: 700, marginBottom: "0.15rem", lineHeight: 1.2 }}>{stop.name}</div>
+                <div style={{ fontSize: "0.65rem", color: isActive ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.45)", fontWeight: 300 }}>{stop.dates}</div>
+                <div style={{ fontSize: "0.62rem", color: isActive ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", marginTop: "0.2rem" }}>{stop.days}</div>
               </div>
             );
           })}
-          </div>
-        </div>
-        <div className={`detail-panel ${selected !== null ? "open" : ""}`}>
-          <div className="detail-handle" />
-          {loc && <>
-            <button className="detail-close" onClick={() => setSelected(null)}>✕</button>
-            <div className="detail-body">
-              {loc.isWedding && <div className="wedding-banner"><span className="wedding-banner-icon">💒</span><div><div className="wedding-banner-text">Het grote moment!</div><div className="wedding-banner-sub">Eindbestemming van de hele reis</div></div></div>}
-              <span className={`detail-tag tag-${loc.type}`}>{loc.typeLabel}</span>
-              <div className="detail-name">{loc.name}</div>
-              <div className="detail-region">📍 {loc.region}</div>
-              <div className="detail-desc">{loc.desc}</div>
-              <div className="detail-chips">
-                <div className="detail-chip">📅 {loc.day}</div>
-                <div className="detail-chip">🗺️ Stop {selected + 1}/{LOCATIONS.length}</div>
-              </div>
-              <div style={{ marginBottom: "0.5rem", fontSize: "0.78rem", fontWeight: 600, color: "var(--muted)" }}>📸 Foto's</div>
-              <div className="detail-photos">
-                {locFotos.map((f, i) => (
-                  <div key={i} className="photo-box"><img src={f.publieke_url} alt={f.bestandsnaam} /></div>
-                ))}
-                <label className="photo-box add-btn" style={{ cursor: "pointer" }}>
-                  {uploading ? <span style={{ fontSize: "0.7rem" }}>⏳</span> : "＋"}
-                  <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleUpload} />
-                </label>
-              </div>
-            </div>
-          </>}
         </div>
       </div>
-      <div className="map-bottom-banner">
-        <div className="map-stop-pills">
-          {LOCATIONS.map((loc, i) => (
-            <div key={loc.id} className={`map-stop-pill ${selected === i ? "active" : ""}`} onClick={() => setSelected(selected === i ? null : i)}>
-              {loc.emoji} {loc.name.split(" ")[0]}
-            </div>
-          ))}
-        </div>
-      </div>
+
       <BottomNav active="map" onNav={onNav} />
     </div>
   );
 }
+
 
 // ─── TIMELINE ─────────────────────────────────────────────────
 function TimelineScreen({ onNav }) {
@@ -1078,6 +1156,7 @@ export default function App() {
     <div className="app">
       <style>{style}</style>
       {screen === "home" && <HomeScreen onNav={setScreen} />}
+      {screen === "map" && <MapScreen onNav={setScreen} />}
       {screen === "hotels" && <HotelsScreen onNav={setScreen} />}
       {screen === "timeline" && <TimelineScreen onNav={setScreen} />}
       {screen === "flights" && <FlightsScreen onNav={setScreen} />}
