@@ -326,20 +326,29 @@ const LOCATIONS = [
 
 const TIMELINE = [
   { day: "Dag 1", date: "31 okt", emoji: "✈️", location: "Heenreis", moments: [{ title: "Vertrek vanuit Nederland naar Mexico-Stad", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: null },
-  { day: "Dag 2", date: "1 nov", emoji: "💀", location: "Mexico-Stad", moments: [{ title: "Día de los Muertos — processie op de Zócalo", by: "Niels", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }, { title: "Ofrendas en altaren in Coyoacán", by: "Rosalie", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: null },
-  { day: "Dag 3", date: "2 nov", emoji: "🏛️", location: "Mexico-Stad", moments: [{ title: "Teotihuacán piramides verkennen", by: "Bram", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: null },
-  { day: "Dag 4", date: "3 nov", emoji: "🎈", location: "Mexico-Stad", moments: [{ title: "Ballonvlucht bij zonsopgang", by: "Rosalie", photos: [], tag: "Avontuur", tagColor: "#FEF3E2", tagText: "#B45309" }], travel: "✈️ Vlucht naar Oaxaca" },
-  { day: "Dag 5–8", date: "4–7 nov", emoji: "🫙", location: "Oaxaca", moments: [{ title: "Mole negro & mezcal op de markt", by: "Bram", photos: [], tag: "Eten", tagColor: "#FEF3E2", tagText: "#B45309" }, { title: "Monte Albán bij zonsondergang", by: "Niels", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: "✈️ Vlucht naar Cancún" },
-  { day: "Dag 9", date: "8 nov", emoji: "✈️", location: "Cancún — Reisdag", moments: [{ title: "Vlucht Oaxaca → Cancún + transfer naar Holbox", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "⛴️ Ferry naar Isla Holbox" },
-  { day: "Dag 10–12", date: "9–11 nov", emoji: "🏝️", location: "Isla Holbox", moments: [{ title: "Zwemmen en snorkelen met walvishaaien", by: "Bram", photos: [], tag: "Strand", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: "🚌 3 uur naar Valladolid" },
-  { day: "Dag 13–15", date: "12–14 nov", emoji: "🗿", location: "Valladolid", moments: [{ title: "Chichén Itzá bij zonsopgang + Ek Balam", by: "Niels", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }, { title: "Cenotes — zwemmen in het blauw", by: "Rosalie", photos: [], tag: "Natuur", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: "🚌 3,5 uur naar Bacalar" },
-  { day: "Dag 16–17", date: "15–16 nov", emoji: "🚣", location: "Bacalar", moments: [{ title: "Kano- en boottocht over de lagune", by: "Bram", photos: [], tag: "Natuur", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: "🚗 Naar Calakmul" },
-  { day: "Dag 18–19", date: "17–18 nov", emoji: "🌿", location: "Calakmul", moments: [{ title: "Jungle-trek naar de Maya-piramides", by: "Niels", photos: [], tag: "Ruïnes", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: "🚗 Terug naar Bacalar" },
-  { day: "Dag 20", date: "19 nov", emoji: "💙", location: "Bacalar", moments: [{ title: "Laatste dag aan het meer", by: "Crew", photos: [], tag: "Rustdag", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: "✈️ Vlucht naar Monterrey" },
-  { day: "Dag 21", date: "20 nov", emoji: "✈️", location: "Reisdag → Monterrey", moments: [{ title: "Vlucht naar Monterrey", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: null },
+  { day: "Dag 2", date: "1 nov", emoji: "💀", location: "Mexico-Stad", moments: [{ title: "Día de los Muertos — dé dag in Mexico-Stad", by: "Crew", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: null },
+  { day: "Dag 3", date: "2 nov", emoji: "🏛️", location: "Mexico-Stad", moments: [{ title: "De stad verkennen — Zócalo, Chapultepec, musea", by: "Crew", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: null },
+  { day: "Dag 4", date: "3 nov", emoji: "🎈", location: "Mexico-Stad", moments: [{ title: "Ballonvlucht bij zonsopgang", by: "Crew", photos: [], tag: "Avontuur", tagColor: "#FEF3E2", tagText: "#B45309" }], travel: null },
+  { day: "Dag 5", date: "4 nov", emoji: "✈️", location: "Reisdag → Oaxaca", moments: [{ title: "Vlucht naar Oaxaca (~2 uur)", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "✈️ 2 uur vliegen" },
+  { day: "Dag 6", date: "5 nov", emoji: "🫙", location: "Oaxaca", moments: [{ title: "Eerste dag Oaxaca — de markt en het centrum", by: "Crew", photos: [], tag: "Eten", tagColor: "#FEF3E2", tagText: "#B45309" }], travel: null },
+  { day: "Dag 7", date: "6 nov", emoji: "🌶️", location: "Oaxaca", moments: [{ title: "Mole negro & mezcal proeven", by: "Crew", photos: [], tag: "Eten", tagColor: "#FEF3E2", tagText: "#B45309" }], travel: null },
+  { day: "Dag 8", date: "7 nov", emoji: "🗿", location: "Oaxaca", moments: [{ title: "Monte Albán & laatste avond Oaxaca", by: "Crew", photos: [], tag: "Cultuur", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: null },
+  { day: "Dag 9", date: "8 nov", emoji: "⛴️", location: "Reisdag → Isla Holbox", moments: [{ title: "Vlucht naar Cancún + ferry naar Holbox", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "✈️ Vlucht + ⛴️ ferry" },
+  { day: "Dag 10", date: "9 nov", emoji: "🏝️", location: "Isla Holbox", moments: [{ title: "Eerste dag eiland — strand & bounty vibes", by: "Crew", photos: [], tag: "Strand", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: null },
+  { day: "Dag 11", date: "10 nov", emoji: "🦈", location: "Isla Holbox", moments: [{ title: "Snorkelen — misschien wel met walvishaaien", by: "Crew", photos: [], tag: "Natuur", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: null },
+  { day: "Dag 12", date: "11 nov", emoji: "🌅", location: "Isla Holbox", moments: [{ title: "Laatste eilanddag — bioluminescentie?", by: "Crew", photos: [], tag: "Strand", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: null },
+  { day: "Dag 13", date: "12 nov", emoji: "🚗", location: "→ Valladolid", moments: [{ title: "Ferry terug + 3 uur rijden naar Valladolid", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "🚗 3 uur rijden" },
+  { day: "Dag 14", date: "13 nov", emoji: "🗿", location: "Valladolid", moments: [{ title: "Chichén Itzá + Ek Balam", by: "Crew", photos: [], tag: "Wereldwonder", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: null },
+  { day: "Dag 15", date: "14 nov", emoji: "💧", location: "Valladolid", moments: [{ title: "Cenotes — zwemmen in ondergrondse grotten", by: "Crew", photos: [], tag: "Natuur", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: null },
+  { day: "Dag 16", date: "15 nov", emoji: "🚗", location: "→ Bacalar", moments: [{ title: "3,5 uur rijden naar het Meer van Zeven Kleuren", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "🚗 3,5 uur rijden" },
+  { day: "Dag 17", date: "16 nov", emoji: "🚣", location: "Bacalar", moments: [{ title: "Kano- of boottocht over de lagune", by: "Crew", photos: [], tag: "Natuur", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: null },
+  { day: "Dag 18", date: "17 nov", emoji: "🚗", location: "Bacalar → Xpujil", moments: [{ title: "Richting de jungle — overnachten bij Xpujil", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "🚗 Naar Xpujil" },
+  { day: "Dag 19", date: "18 nov", emoji: "🌿", location: "Calakmul", moments: [{ title: "Verborgen jungle-ruïnes van Calakmul", by: "Crew", photos: [], tag: "Ruïnes", tagColor: "#E8F4E8", tagText: "#2D5A3D" }], travel: "🚗 Terug naar Bacalar" },
+  { day: "Dag 20", date: "19 nov", emoji: "💙", location: "Bacalar", moments: [{ title: "Los Rapidos — de lazy river!", by: "Crew", photos: [], tag: "Natuur", tagColor: "#E0F0F8", tagText: "#0369A1" }], travel: null },
+  { day: "Dag 21", date: "20 nov", emoji: "✈️", location: "Reisdag → Monterrey", moments: [{ title: "Vlucht naar Monterrey — Roel zien!", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: "✈️ Vlucht naar Monterrey" },
   { day: "Dag 22", date: "21 nov", emoji: "💒", location: "Monterrey — De Bruiloft", isWedding: true, moments: [{ title: "De bruiloft van Roel 🎊", by: "Crew", photos: [], tag: "Bruiloft", tagColor: "#FEF9E7", tagText: "#92620A" }], travel: null },
   { day: "Dag 23", date: "22 nov", emoji: "😴", location: "Monterrey", moments: [{ title: "Bijkomen van de bruiloft", by: "Crew", photos: [], tag: "Rustdag", tagColor: "#F3F4F6", tagText: "#6B7280" }], travel: null },
-  { day: "Dag 24", date: "23 nov", emoji: "🏠", location: "Terugreis", moments: [{ title: "Vlucht terug naar Nederland 🇲🇽", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: null },
+  { day: "Dag 24", date: "23 nov", emoji: "🏠", location: "Terugreis", moments: [{ title: "Vlucht terug naar Nederland — adiós México 🇲🇽", by: "Crew", photos: [], tag: "Reisdag", tagColor: "#EEF2FF", tagText: "#4338CA" }], travel: null },
 ];
 
 // ─── COMPONENTS ───────────────────────────────────────────────
@@ -404,6 +413,43 @@ function BottomNav({ active, onNav }) {
   );
 }
 
+
+// ─── COUNTDOWN ────────────────────────────────────────────────
+function Countdown() {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(t);
+  }, []);
+
+  const tripStart = new Date("2026-10-31T09:00:00").getTime();
+  const wedding = new Date("2026-11-21T14:00:00").getTime();
+  const target = now < tripStart ? tripStart : wedding;
+  const label = now < tripStart ? "tot vertrek" : "tot de bruiloft 💒";
+  const diff = Math.max(0, target - now);
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+
+  if (diff === 0) return null;
+
+  return (
+    <div style={{
+      margin: "1rem 1.25rem 0", borderRadius: 16, padding: "1rem 1.25rem",
+      background: "linear-gradient(135deg, #D4AF37 0%, #C4622D 100%)",
+      display: "flex", alignItems: "center", justifyContent: "space-between", color: "white"
+    }}>
+      <div>
+        <div style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.85 }}>⏳ Countdown</div>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", marginTop: "0.15rem" }}>
+          {days} dagen, {hours} uur
+        </div>
+        <div style={{ fontSize: "0.75rem", opacity: 0.85, fontWeight: 300 }}>{label}</div>
+      </div>
+      <div style={{ fontSize: "2.2rem" }}>{Date.now() < new Date("2026-10-31").getTime() ? "🇲🇽" : "💒"}</div>
+    </div>
+  );
+}
+
 // ─── HOME ─────────────────────────────────────────────────────
 function HomeScreen({ onNav }) {
   const recent = [
@@ -420,13 +466,14 @@ function HomeScreen({ onNav }) {
           <div className="hero-title">Hasta la<br />Boda</div>
           <div className="hero-dates">31 okt – 23 nov 2026 · 24 dagen</div>
           <div className="hero-stats">
-            {[["8","Stops"],["24","Dagen"],["3","Reizigers"]].map(([n,l]) => (
+            {[["7","Stops"],["24","Dagen"],["3","Reizigers"]].map(([n,l]) => (
               <div key={l}><div className="hero-stat-num">{n}</div><div className="hero-stat-label">{l}</div></div>
             ))}
           </div>
         </div>
         <div className="hero-emoji">🌵</div>
       </div>
+      <Countdown />
       <div className="section">
         <div className="section-header"><div className="section-title">De crew</div></div>
         <div className="crew-scroll">
@@ -470,25 +517,23 @@ function HomeScreen({ onNav }) {
 const MAPBOX_TOKEN = "pk.eyJ1IjoibnNuaWVscyIsImEiOiJjbW51am42YTkwN2dmMnJzOW8zdnp4eDQ3In0.hA84ihN32uGkuKpVvg9Ajg";
 
 const STOPS = [
-  { id: 1, name: "Mexico-Stad", emoji: "🏛️", dates: "31 okt – 3 nov", days: "4 dagen", lng: -99.1332, lat: 19.4326, zoom: 11 },
-  { id: 2, name: "Oaxaca", emoji: "🫙", dates: "4 – 7 nov", days: "4 dagen", lng: -96.7266, lat: 17.0669, zoom: 12 },
-  { id: 3, name: "Cancún", emoji: "✈️", dates: "8 nov", days: "Reisdag", lng: -86.8515, lat: 21.1619, zoom: 11 },
-  { id: 4, name: "Isla Holbox", emoji: "🏝️", dates: "9 – 11 nov", days: "3 dagen", lng: -87.3769, lat: 21.5245, zoom: 12 },
-  { id: 5, name: "Valladolid", emoji: "🗿", dates: "12 – 14 nov", days: "3 dagen", lng: -88.2003, lat: 20.6896, zoom: 12 },
-  { id: 6, name: "Bacalar", emoji: "🚣", dates: "15–16 & 19 nov", days: "3 nachten", lng: -88.3953, lat: 18.6783, zoom: 12 },
-  { id: 7, name: "Calakmul", emoji: "🌿", dates: "17 – 18 nov", days: "2 dagen", lng: -89.7956, lat: 18.1057, zoom: 11 },
-  { id: 8, name: "Monterrey", emoji: "💒", dates: "20 – 23 nov", days: "4 dagen", lng: -100.3161, lat: 25.6866, zoom: 11, isWedding: true },
+  { id: 1, name: "Mexico-Stad", emoji: "🏛️", dates: "31 okt – 3 nov", days: "4 dagen", lng: -99.1332, lat: 19.4326, zoom: 10.5, desc: "Día de los Muertos & ballonvlucht" },
+  { id: 2, name: "Oaxaca", emoji: "🫙", dates: "4 – 7 nov", days: "4 dagen", lng: -96.7266, lat: 17.0669, zoom: 11.5, desc: "Mole, mezcal & Monte Albán" },
+  { id: 3, name: "Isla Holbox", emoji: "🏝️", dates: "8 – 11 nov", days: "4 dagen", lng: -87.3769, lat: 21.5245, zoom: 11.5, desc: "Paradijseiland & walvishaaien" },
+  { id: 4, name: "Valladolid", emoji: "🗿", dates: "12 – 14 nov", days: "3 dagen", lng: -88.2003, lat: 20.6896, zoom: 11.5, desc: "Chichén Itzá, Ek Balam & cenotes" },
+  { id: 5, name: "Bacalar", emoji: "🚣", dates: "15 – 19 nov", days: "5 dagen", lng: -88.3953, lat: 18.6783, zoom: 11.5, desc: "Meer van Zeven Kleuren & rapidos" },
+  { id: 6, name: "Calakmul", emoji: "🌿", dates: "17 – 18 nov", days: "trip", lng: -89.7956, lat: 18.1057, zoom: 10.5, desc: "Verborgen jungle-ruïnes" },
+  { id: 7, name: "Monterrey", emoji: "💒", dates: "20 – 23 nov", days: "4 dagen", lng: -100.3161, lat: 25.6866, zoom: 10.5, isWedding: true, desc: "De bruiloft van Roel! 🎊" },
 ];
 
 const ROUTES = [
-  { from: 0, to: 1, type: "flight" },   // Mexico-Stad → Oaxaca
-  { from: 1, to: 2, type: "flight" },   // Oaxaca → Cancún
-  { from: 2, to: 3, type: "ferry" },    // Cancún → Holbox
-  { from: 3, to: 4, type: "bus" },      // Holbox → Valladolid
-  { from: 4, to: 5, type: "bus" },      // Valladolid → Bacalar
-  { from: 5, to: 6, type: "car" },      // Bacalar → Calakmul
-  { from: 6, to: 5, type: "car" },      // Calakmul → Bacalar
-  { from: 5, to: 7, type: "flight" },   // Bacalar → Monterrey
+  { from: 0, to: 1, type: "flight", label: "4 nov · 2u vlucht" },
+  { from: 1, to: 2, type: "flight", label: "8 nov · vlucht + ferry" },
+  { from: 2, to: 3, type: "car", label: "12 nov · 3u rijden" },
+  { from: 3, to: 4, type: "car", label: "15 nov · 3,5u rijden" },
+  { from: 4, to: 5, type: "car", label: "17-18 nov · jungle trip" },
+  { from: 5, to: 4, type: "car", label: "terug naar Bacalar" },
+  { from: 4, to: 6, type: "flight", label: "20 nov · vlucht" },
 ];
 
 function MapScreen({ onNav }) {
@@ -513,27 +558,48 @@ function MapScreen({ onNav }) {
     if (!mapLoaded || !mapContainer.current || mapRef.current) return;
     const map = new window.mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/outdoors-v12",
+      style: "mapbox://styles/mapbox/satellite-streets-v12",
       center: [STOPS[0].lng, STOPS[0].lat],
       zoom: STOPS[0].zoom,
+      pitch: 55,
+      bearing: -10,
       accessToken: MAPBOX_TOKEN,
       attributionControl: false,
     });
 
     map.on("load", () => {
+      // 3D terrain
+      map.addSource("mapbox-dem", {
+        type: "raster-dem",
+        url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+        tileSize: 512,
+        maxzoom: 14
+      });
+      map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
+
+      // Sky atmosphere
+      map.addLayer({
+        id: "sky",
+        type: "sky",
+        paint: {
+          "sky-type": "atmosphere",
+          "sky-atmosphere-sun": [0.0, 0.0],
+          "sky-atmosphere-sun-intensity": 12
+        }
+      });
+
       // Draw routes as arcs
       const routeFeatures = ROUTES.map((r, i) => {
         const from = STOPS[r.from];
         const to = STOPS[r.to];
         const isFlight = r.type === "flight";
-        // Create arc points
         const points = [];
-        const steps = isFlight ? 30 : 15;
+        const steps = isFlight ? 40 : 20;
         for (let t = 0; t <= steps; t++) {
           const frac = t / steps;
           const lng = from.lng + (to.lng - from.lng) * frac;
           const lat = from.lat + (to.lat - from.lat) * frac;
-          const arc = isFlight ? Math.sin(Math.PI * frac) * (Math.abs(to.lng - from.lng) * 0.3) : 0;
+          const arc = isFlight ? Math.sin(Math.PI * frac) * (Math.abs(to.lng - from.lng) * 0.25) : 0;
           points.push([lng, lat + arc]);
         }
         return {
@@ -548,52 +614,75 @@ function MapScreen({ onNav }) {
         data: { type: "FeatureCollection", features: routeFeatures }
       });
 
-      // Flight routes - dashed orange arc
+      // Glow underneath
+      map.addLayer({
+        id: "routes-glow",
+        type: "line",
+        source: "routes",
+        paint: {
+          "line-color": "#FFB86B",
+          "line-width": 6,
+          "line-blur": 6,
+          "line-opacity": 0.5
+        }
+      });
+
+      // Flight routes - bright dashed
       map.addLayer({
         id: "routes-flight",
         type: "line",
         source: "routes",
         filter: ["==", ["get", "type"], "flight"],
         paint: {
-          "line-color": "#C4622D",
-          "line-width": 2,
+          "line-color": "#FFD9A0",
+          "line-width": 2.5,
           "line-dasharray": [2, 2],
-          "line-opacity": 0.8
+          "line-opacity": 0.95
         }
       });
 
-      // Bus/ferry/car routes - solid muted line
+      // Ground routes - solid
       map.addLayer({
         id: "routes-ground",
         type: "line",
         source: "routes",
         filter: ["!=", ["get", "type"], "flight"],
         paint: {
-          "line-color": "#2D5A3D",
-          "line-width": 2,
-          "line-dasharray": [1, 3],
-          "line-opacity": 0.7
+          "line-color": "#9FE2BF",
+          "line-width": 2.5,
+          "line-dasharray": [1, 2],
+          "line-opacity": 0.9
         }
       });
 
-      // Add markers
+      // Markers with day numbers
       STOPS.forEach((stop, i) => {
         const el = document.createElement("div");
         el.style.cssText = `
-          width: 36px; height: 36px; border-radius: 50%;
-          background: ${stop.isWedding ? "linear-gradient(135deg,#D4AF37,#C4622D)" : "white"};
-          border: 2.5px solid ${stop.isWedding ? "#D4AF37" : "#C4622D"};
-          display: flex; align-items: center; justify-content: center;
-          font-size: 1rem; cursor: pointer;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-          transition: transform 0.2s;
+          display: flex; flex-direction: column; align-items: center; cursor: pointer;
         `;
-        el.innerHTML = stop.emoji;
+        el.innerHTML = `
+          <div style="
+            width: 40px; height: 40px; border-radius: 50%;
+            background: ${stop.isWedding ? "linear-gradient(135deg,#D4AF37,#C4622D)" : "rgba(255,255,255,0.95)"};
+            border: 2.5px solid ${stop.isWedding ? "#FFD700" : "#C4622D"};
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+            transition: transform 0.25s;
+          " class="marker-circle">${stop.emoji}</div>
+          <div style="
+            margin-top: 3px; padding: 1px 8px; border-radius: 10px;
+            background: rgba(26,18,8,0.85); color: white;
+            font-family: 'DM Sans', sans-serif; font-size: 0.6rem; font-weight: 700;
+            white-space: nowrap; letter-spacing: 0.02em;
+          ">${stop.name}</div>
+        `;
         el.addEventListener("click", () => {
           setActive(i);
           scrollToSlide(i);
         });
-        const marker = new window.mapboxgl.Marker({ element: el, anchor: "center" })
+        const marker = new window.mapboxgl.Marker({ element: el, anchor: "bottom" })
           .setLngLat([stop.lng, stop.lat])
           .addTo(map);
         markersRef.current.push({ marker, el });
@@ -605,18 +694,23 @@ function MapScreen({ onNav }) {
     return () => { if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } };
   }, [mapLoaded]);
 
-  // Fly to active stop and update marker styles
+  // Fly to active stop with cinematic movement
   useEffect(() => {
     if (!mapRef.current) return;
     const stop = STOPS[active];
     mapRef.current.flyTo({
       center: [stop.lng, stop.lat],
       zoom: stop.zoom,
-      duration: 1200,
+      pitch: 55,
+      bearing: active % 2 === 0 ? -10 : 10,
+      duration: 2200,
       essential: true
     });
     markersRef.current.forEach(({ el }, i) => {
-      el.style.transform = i === active ? "scale(1.3)" : "scale(1)";
+      const circle = el.querySelector(".marker-circle");
+      if (circle) {
+        circle.style.transform = i === active ? "scale(1.35)" : "scale(1)";
+      }
       el.style.zIndex = i === active ? "10" : "1";
     });
   }, [active]);
@@ -650,18 +744,26 @@ function MapScreen({ onNav }) {
       </div>
 
       {/* Route indicator between stops */}
-      {active < STOPS.length - 1 && (
-        <div style={{ background: "white", borderTop: "1px solid rgba(139,115,85,0.1)", padding: "0.4rem 1.25rem", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.72rem", color: "var(--muted)" }}>
-          <span>{STOPS[active].name}</span>
-          <span style={{ flex: 1, textAlign: "center" }}>
-            {(() => {
-              const r = ROUTES.find(r => r.from === active);
-              return r ? `${routeIcon(r.type)} ${r.type === "flight" ? "vlucht" : r.type === "ferry" ? "ferry" : r.type === "bus" ? "bus" : "auto"}` : "→";
-            })()}
-          </span>
-          <span>{STOPS[active + 1]?.name}</span>
-        </div>
-      )}
+      <div style={{ background: "white", borderTop: "1px solid rgba(139,115,85,0.1)", padding: "0.45rem 1.25rem", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.72rem", color: "var(--muted)" }}>
+        {active < STOPS.length - 1 ? (
+          <>
+            <span style={{ fontWeight: 600 }}>{STOPS[active].name}</span>
+            <span style={{ flex: 1, textAlign: "center", color: "var(--terracotta)", fontWeight: 600 }}>
+              {(() => {
+                const r = ROUTES.find(r => r.from === active && r.to === active + 1) || ROUTES.find(r => r.from === active);
+                return r ? `${routeIcon(r.type)} ${r.label}` : "→";
+              })()}
+            </span>
+            <span style={{ fontWeight: 600 }}>{STOPS[Math.min(active + 1, STOPS.length - 1)].name}</span>
+          </>
+        ) : (
+          <span style={{ flex: 1, textAlign: "center", color: "#D4AF37", fontWeight: 700 }}>💒 De bruiloft van Roel — het einddoel! 🎊</span>
+        )}
+        <button onClick={() => {
+          if (!mapRef.current) return;
+          mapRef.current.flyTo({ center: [-94.5, 21.5], zoom: 4.3, pitch: 0, bearing: 0, duration: 1800 });
+        }} style={{ background: "var(--cream)", border: "none", borderRadius: 8, padding: "0.25rem 0.55rem", fontSize: "0.68rem", cursor: "pointer", color: "var(--muted)", fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>🌎 Overzicht</button>
+      </div>
 
       {/* Slidebar */}
       <div style={{ background: "var(--night)", padding: "0.75rem 0 0.85rem", flexShrink: 0 }}>
